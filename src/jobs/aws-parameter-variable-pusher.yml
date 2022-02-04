@@ -30,7 +30,7 @@ parameters:
     default: ''
   string_type:
     type: string
-    default: ''  
+    default: ''
 steps:
   - aws-cli/setup:
       aws-access-key-id: << parameters.aws-access-key-id >>

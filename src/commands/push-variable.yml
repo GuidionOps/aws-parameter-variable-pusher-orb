@@ -11,7 +11,7 @@ parameters:
     default: ''
   string_type:
     type: string
-    default: ''  
+    default: ''
 steps:
   - run:
       name: Pushes CircleCI variables to the AWS SSM Parameter store
