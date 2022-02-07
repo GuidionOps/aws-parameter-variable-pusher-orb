@@ -34,7 +34,7 @@ if [[ "$(aws ssm get-parameter --with-decryption --name "/${CIRCLE_PROJECT_REPON
 
   exit 1
 fi
-
+done
 
 
 for i in ${PARAM_CIRCLECI_VARIABLE//,/ }
