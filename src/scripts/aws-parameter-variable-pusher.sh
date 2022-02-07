@@ -23,6 +23,20 @@ if [[ -z $(aws ssm describe-parameters --output text --parameter-filters "Key=Na
 fi
 done
 
+
+
+for i in ${PARAM_CIRCLECI_VARIABLE//,/ }
+do
+if [[ "$(aws ssm get-parameter --with-decryption --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" | jq --raw-output .Parameter.Type)" != "${PARAM_STRING_TYPE}" ]]; then
+
+  echo "Parameter store StringType (String or SecureString) is different on AWS compared with what you want to do, please manually delete the partameter store variable, or use the same StringType"
+  echo "ABORTING!!"
+
+  exit 1
+fi
+
+
+
 for i in ${PARAM_CIRCLECI_VARIABLE//,/ }
 do
 if [[ "$(aws ssm get-parameter --with-decryption --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" | jq --raw-output .Parameter.Value)" == $"${!i}" ]]; then
