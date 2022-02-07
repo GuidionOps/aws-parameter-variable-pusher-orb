@@ -2,7 +2,7 @@
 
 for i in ${PARAM_CIRCLECI_VARIABLE//,/ }
 do
-if [[ -n $(aws ssm describe-parameters --output text --parameter-filters "Key=Name,Values=/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}") ]]; then
+if [[ -z $(aws ssm describe-parameters --output text --parameter-filters "Key=Name,Values=/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}") ]]; then
   echo "AWS parameter not found"
   if [[ ${PARAM_STRING_TYPE} == "SecureString" ]]; then
 
