@@ -1,0 +1,23 @@
+description: Pushes CircleCI variables to the AWS SSM Parameter store
+parameters:
+  aws_enviroment:
+    type: string
+    default: ''
+  aws_kms_key:
+    type: string
+    default: ''
+  circleci_variable:
+    type: string
+    default: ''
+  string_type:
+    type: string
+    default: ''
+steps:
+  - run:
+      name: Pushes CircleCI variables to the AWS SSM Parameter store
+      command: << include(scripts/aws-parameter-variable-pusher.sh) >>
+      environment:
+        PARAM_AWS_ENVIROMENT: << parameters.aws_enviroment >>
+        PARAM_AWS_KMS_KEY: << parameters.aws_kms_key >>
+        PARAM_CIRCLECI_VARIABLE: << parameters.circleci_variable >>
+        PARAM_STRING_TYPE: << parameters.string_type >>
