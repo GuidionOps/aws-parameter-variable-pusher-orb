@@ -25,7 +25,7 @@ done
 
 for i in ${PARAM_CIRCLECI_VARIABLE//,/ }
 do
-if [[ "$(aws ssm get-parameter --with-decryption --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" | jq --raw-output .Value)" == $"${!i}" ]]; then
+if [[ "$(aws ssm get-parameter --with-decryption --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" | jq --raw-output .Parameter.Value)" == $"${!i}" ]]; then
   echo "Variable is still the same on AWS"
   continue
 else
