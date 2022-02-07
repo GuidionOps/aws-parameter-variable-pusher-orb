@@ -4,8 +4,16 @@ for i in ${PARAM_CIRCLECI_VARIABLE//,/ }
 do
 if [[ -n $(aws ssm describe-parameters --output text --parameter-filters "Key=Name,Values=/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}") ]]; then
   echo "AWS parameter not found"
-  aws ssm put-parameter --type "${PARAM_STRING_TYPE}" --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" --value $"${!i}" --key-id "${PARAM_AWS_KMS_KEY}"
+  if [[ ${PARAM_STRING_TYPE} == "SecureString" ]]; then
 
+    aws ssm put-parameter --type "${PARAM_STRING_TYPE}" --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" --value $"${!i}" --key-id "${PARAM_AWS_KMS_KEY}"
+
+  else
+
+    aws ssm put-parameter --type "${PARAM_STRING_TYPE}" --name "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" --value $"${!i}"
+
+  fi
+  
   aws ssm add-tags-to-resource --resource-type "Parameter" --resource-id "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" --tags Key=Enviroment,Value="${AWS_ACCOUNT_NAME}"
   aws ssm add-tags-to-resource --resource-type "Parameter" --resource-id "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" --tags Key=Owner,Value="${CIRCLE_PROJECT_USERNAME}"
   aws ssm add-tags-to-resource --resource-type "Parameter" --resource-id "/${CIRCLE_PROJECT_REPONAME}/${PARAM_AWS_ENVIROMENT}/${i}" --tags Key=GitRepository,Value="${CIRCLE_PROJECT_REPONAME}"
